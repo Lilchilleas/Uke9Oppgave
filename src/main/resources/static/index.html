@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Oblig2</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <div>
+        <label for="navn">Navn</label>
+        <input type="text" id="navn">
+    </div>
+
+    <div>
+        <label for="alder">Alder</label>
+        <input type="text" id="alder">
+    </div>
+
+    <div>
+        <label for="epost">Epost</label>
+        <input type="text" id="epost">
+    </div>
+
+    <button onclick="Registrer()">Registrer</button>
+
+
+</div>
+
+
+<div class="container">
+
+    <h1>Alle Kunder</h1>
+
+    <div id="res">
+
+    </div>
+
+
+    <button onclick="Slett()">Slett alle brukere</button>
+</div>
+
+
+</body>
+
+
+<script type="text/javascript">
+
+    //Slett
+    function slett() {
+        $.delete("/slette",function() {
+
+            $.get("/hente",function(data) {
+                viseData(data);
+            })
+
+        })
+    }
+
+    //Registrer
+    function Registrer() {
+
+        let navnF = $("#navn").val();
+        let alderF = $("#alder").val();
+        let epostF = $("#epost").val();
+
+        let obj = {
+            navn : navnF,
+            alder : alderF,
+            epost : epostF
+        }
+
+        $.post("/lagre",obj,function() {
+
+            $("/hente",function(data) {
+                viseData(data);
+            })
+
+        })
+
+    }
+
+    //Vise Data
+    function viseData(kunde) {
+
+        let ut = "<table><tr><th>Navn</th><th>Alder</th><th>Epost</th></tr>";
+
+        for(let i of kunde) {
+            ut+= "<tr><td>"+kunde.navn+"</td><td>"+kunde.alder+"</td>"+kunde.epost+"</tr>";
+        }
+        ut+= "</table>"
+        $("#res").html(ut);
+    }
+</script>
+
+
+
+</html>
